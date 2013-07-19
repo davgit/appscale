@@ -55,7 +55,6 @@ increaseconnections()
   echo "net.netfilter.nf_conntrack_checksum = 1" >> /etc/sysctl.conf
   echo "net.netfilter.nf_conntrack_log_invalid = 0" >> /etc/sysctl.conf
   echo "net.netfilter.nf_conntrack_expect_max = 256" >> /etc/sysctl.conf
-  echo "net.core.somaxconn = 20240" >> /etc/sysctl.conf
   /sbin/sysctl -p /etc/sysctl.conf 
 }
 
