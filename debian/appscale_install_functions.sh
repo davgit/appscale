@@ -30,7 +30,7 @@ increaseconnections()
   echo "net.ipv4.tcp_orphan_retries = 1" >> /etc/sysctl.conf
   echo "net.ipv4.tcp_fin_timeout = 25" >> /etc/sysctl.conf
   echo "net.ipv4.tcp_max_orphans = 8192" >> /etc/sysctl.conf
-  echo "net.ipv4.ip_local_port_range = 32768    61000" >> /etc/sysctl.confo 
+  echo "net.ipv4.ip_local_port_range = 32768    61000" >> /etc/sysctl.conf
   echo "net.netfilter.nf_conntrack_generic_timeout = 12" >> /etc/sysctl.conf
   echo "net.netfilter.nf_conntrack_tcp_timeout_syn_sent = 12" >> /etc/sysctl.conf
   echo "net.netfilter.nf_conntrack_tcp_timeout_syn_recv = 12" >> /etc/sysctl.conf
