@@ -23,7 +23,7 @@ export APPSCALE_VERSION=1.8.0
 
 increaseconnections()
 {
-
+  modprobe nf_conntrack
   echo "net.core.somaxconn = 20240" >> /etc/sysctl.conf
   echo "net.ipv4.tcp_tw_recycle = 0" >> /etc/sysctl.conf
   echo "net.ipv4.tcp_tw_reuse = 0" >> /etc/sysctl.conf
