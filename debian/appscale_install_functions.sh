@@ -27,31 +27,6 @@ increaseconnections()
   echo "net.ipv4.tcp_orphan_retries = 1" >> /etc/sysctl.conf
   echo "net.ipv4.tcp_fin_timeout = 25" >> /etc/sysctl.conf
   echo "net.ipv4.tcp_max_orphans = 8192" >> /etc/sysctl.conf
-  echo "net.ipv4.ip_local_port_range = 32768    61000" >> /etc/sysctl.conf
-  echo "net.netfilter.nf_conntrack_generic_timeout = 12" >> /etc/sysctl.conf
-  echo "net.netfilter.nf_conntrack_tcp_timeout_syn_sent = 12" >> /etc/sysctl.conf
-  echo "net.netfilter.nf_conntrack_tcp_timeout_syn_recv = 12" >> /etc/sysctl.conf
-  echo "net.netfilter.nf_conntrack_tcp_timeout_established = 2000" >> /etc/sysctl.conf
-  echo "net.netfilter.nf_conntrack_tcp_timeout_fin_wait = 12" >> /etc/sysctl.conf
-  echo "net.netfilter.nf_conntrack_tcp_timeout_close_wait = 12" >> /etc/sysctl.conf
-  echo "net.netfilter.nf_conntrack_tcp_timeout_last_ack = 12" >> /etc/sysctl.conf
-  echo "net.netfilter.nf_conntrack_tcp_timeout_time_wait = 10" >> /etc/sysctl.conf
-  echo "net.netfilter.nf_conntrack_tcp_timeout_close = 8" >> /etc/sysctl.conf
-  echo "net.netfilter.nf_conntrack_tcp_timeout_max_retrans = 30" >> /etc/sysctl.conf
-  echo "net.netfilter.nf_conntrack_tcp_timeout_unacknowledged = 30" >> /etc/sysctl.conf
-  echo "net.netfilter.nf_conntrack_tcp_loose = 1" >> /etc/sysctl.conf
-  echo "net.netfilter.nf_conntrack_tcp_be_liberal = 0" >> /etc/sysctl.conf
-  echo "net.netfilter.nf_conntrack_tcp_max_retrans = 3" >> /etc/sysctl.conf
-  echo "net.netfilter.nf_conntrack_udp_timeout = 12" >> /etc/sysctl.conf
-  echo "net.netfilter.nf_conntrack_udp_timeout_stream = 18" >> /etc/sysctl.conf
-  echo "net.netfilter.nf_conntrack_icmp_timeout = 8" >> /etc/sysctl.conf
-  echo "net.netfilter.nf_conntrack_acct = 1" >> /etc/sysctl.conf
-  echo "net.netfilter.nf_conntrack_max = 1048576" >> /etc/sysctl.conf
-  echo "net.netfilter.nf_conntrack_count = 7645" >> /etc/sysctl.conf
-  echo "net.netfilter.nf_conntrack_buckets = 16384" >> /etc/sysctl.conf
-  echo "net.netfilter.nf_conntrack_checksum = 1" >> /etc/sysctl.conf
-  echo "net.netfilter.nf_conntrack_log_invalid = 0" >> /etc/sysctl.conf
-  echo "net.netfilter.nf_conntrack_expect_max = 256" >> /etc/sysctl.conf
   /sbin/sysctl -p /etc/sysctl.conf 
 }
 
