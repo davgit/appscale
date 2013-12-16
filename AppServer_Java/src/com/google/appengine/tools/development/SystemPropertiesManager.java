@@ -37,7 +37,7 @@ public class SystemPropertiesManager
 
   public void setAppengineSystemProperties(String release, String applicationId, String majorVersionId)
   {
-    SystemProperty.environment.set(SystemProperty.Environment.Value.Production);
+    SystemProperty.environment.set(SystemProperty.Environment.Value.Development);
     if (release == null)
     {
       release = "null";
