@@ -865,6 +865,48 @@ class AppConsolePage(AppDashboard):
       'all_apps_this_user_owns' : apps_user_is_admin_on
     })
 
+class DatastorePage(AppDashboard):
+
+
+  TEMPLATE = "datatore/select.html"
+
+  def get(self):
+    is_cloud_admin = self.helper.is_user_cloud_admin()
+    if is_cloud_admin:
+      apps_user_is_admin_on = self.dstore.get_application_info().keys()
+    else:
+      apps_user_is_admin_on = self.helper.get_owned_apps()
+
+    self.render_page(page='select', template_file=self.TEMPLATE, values = {
+      'all_apps_this_user_owns' : apps_user_is_admin_on
+    })
+
+class DatastoreViewer(AppDashboard):
+
+
+  TEMPLATE = "datatore/viewer.html"
+
+  def get(self):
+    is_cloud_admin = self.helper.is_user_cloud_admin()
+    if is_cloud_admin:
+      apps_user_is_admin_on = self.dstore.get_application_info().keys()
+    else:
+      apps_user_is_admin_on = self.helper.get_owned_apps()
+
+    app_name = self.request.get("appid")
+    if (not is_cloud_admin) and (app_name not in apps_user_is_admin_on):
+      response = json.dumps({"error": True, "message": "Not authorized"})
+      self.response.out.write(response)
+      return
+
+    namespace = self.request.get("namespace")
+    query_to_run = self.request.get("query")
+    cursor = self.request.get("cursor")
+
+    self.render_page(page='datastore', template_file=self.TEMPLATE, values = {
+      'all_apps_this_user_owns' : apps_user_is_admin_on
+    })
+
 
 
 class DatastoreStats(AppDashboard):
@@ -1126,7 +1168,9 @@ app = webapp2.WSGIApplication([ ('/', StatusPage),
                                 ('/logs/(.+)', LogServicePage),
                                 ('/gather-logs', LogDownloader),
                                 ('/groomer', RunGroomer),
-                                ('/change-password', ChangePasswordPage)
+                                ('/change-password', ChangePasswordPage),
+                                ('/datastore/?', DatastorePage),
+                                ('/datastore/viewer', DatastoreViewer),
                               ], debug=True)
 
 
