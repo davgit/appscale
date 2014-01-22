@@ -1,22 +1,35 @@
-<!-- FILE:templates/apps/stats.html -->
+<!-- FILE:templates/logs/service.html -->
 <!--Body content-->
+
+
 <div id="content" class="clearfix">
     <div class="contentwrapper"><!--Content wrapper-->
+
+        <div class="heading">
+
+            <h3>Datastore Viewer</h3>                    
+
+            <div class="resBtnSearch">
+                <a href="#"><span class="icon16 icomoon-icon-search-3"></span></a>
+            </div>
+
+        </div><!-- End .heading-->
+
         <!-- Build page from here: -->
         <div class="row-fluid">
-          <div class="span12">
+          <div class="offset1 span8">
             <div class="page-header">
-                <h1>Datastore Viewer for {{ appid }}</h1>
+              <h1>View {{ app_id }}:</h1>
             </div><!--close header-->
-              <div class="row-fluid">
-                <div style="margin-right:auto; margin-left:auto;">
-                </div><!-- close marginright -->
-                <div class="offset1 span8">
-                  <div class="graph-container">
-                    <div class="graph" id="requests-per-second-flot"></div>
-		  </div><!-- close request per sec container -->
-                </div><!-- close offset -->
-              </div><!-- close row fluid-->
+            {% for result in results %}
+              <p> {{ result }} </p>
+              <!-- only show the button if there is more results -->
+              <a class="btn" href="/datastore/viewer/?app={{app_id}}?next_cursor={{next_cursor}}?query={{query_string}}">Next</a>
+          {% if is_more %}
+            <a class="btn btn-success pull-right" href="/datstore/viewer?app={{app_id}}?next_cursor={{next_cursor}}">Next 20</a>
+          {% endif %}
+          </div><!--close span6 -->
+        <div class="span3"></div> <!--spacing div-->
         </div> <!-- end row fluid -->
     </div> <!-- end content wrapper -->
 </div> <!--end content-->

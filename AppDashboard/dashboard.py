@@ -868,7 +868,7 @@ class AppConsolePage(AppDashboard):
 class DatastorePage(AppDashboard):
 
 
-  TEMPLATE = "datatore/select.html"
+  TEMPLATE = "datastore/select.html"
 
   def get(self):
     is_cloud_admin = self.helper.is_user_cloud_admin()
@@ -886,28 +886,59 @@ class DatastoreViewer(AppDashboard):
 
   TEMPLATE = "datatore/viewer.html"
 
+  # The number of entities we should present on each page.
+  ENTITIES_PER_PAGE = 20
+
   def get(self):
-    is_cloud_admin = self.helper.is_user_cloud_admin()
-    if is_cloud_admin:
-      apps_user_is_admin_on = self.dstore.get_application_info().keys()
-    else:
-      apps_user_is_admin_on = self.helper.get_owned_apps()
-
-    app_name = self.request.get("appid")
-    if (not is_cloud_admin) and (app_name not in apps_user_is_admin_on):
-      response = json.dumps({"error": True, "message": "Not authorized"})
-      self.response.out.write(response)
-      return
-
+    limit = self.request.get("limit")
     namespace = self.request.get("namespace")
     query_to_run = self.request.get("query")
-    cursor = self.request.get("cursor")
+    app_id = self.request.get("appid")
+    if not limit:
+      limit = self.ENTITIES_PER_PAGE
+    if not namespace:
+      namespace = ""
+
+    #STUB
+    app_id = "guestbook"
+    limit = 5
+    namespace = ""
+    query_to_run = "SELECT * FROM Greeting"
+     
+    is_cloud_admin = self.helper.is_user_cloud_admin()
+    apps_user_is_admin_on = self.helper.get_owned_apps()
+    if (not is_cloud_admin) and (app_id not in apps_user_is_admin_on):
+      self.redirect('/', self.response)
+
+    encoded_cursor = self.request.get('next_cursor')
+    if encoded_cursor and encoded_cursor != "None":
+      start_cursor = Cursor(urlsafe=encoded_cursor)
+    else:
+      start_cursor = None
+
+    query = ndb.gql(query_to_run)
+    # Rebuild the query with the given namespace and app_name.
+    query = ndb.Query(kind=query.kind(), ancestor=query.ancestor(),
+      filters=query.filters(), orders=query.orders(), app=app_id,
+      namespace=query.namespace(), default_options=query.default_options())
+
+    results, cursor, is_more = query.fetch_page(limit, start_cursor= \
+      start_cursor, produce_cursor=True)
+
+    cursor_value = None
+    if cursor:
+      cursor_value = cursor.urlsafe()
+
+    logging.info("Results: {0}".format(results))
+    logging.info("Diction: {0}".format(results.to_dict())) 
 
     self.render_page(page='datastore', template_file=self.TEMPLATE, values = {
-      'all_apps_this_user_owns' : apps_user_is_admin_on
+      'app_id' : app_id,
+      'results' : results,
+      'next_cursor' : cursor_value,
+      'is_more' : is_more,
+      'query_string' : query_to_run
     })
-
-
 
 class DatastoreStats(AppDashboard):
   """ Class that returns datastore statistics in JSON such as the number of 
@@ -1029,7 +1060,8 @@ class InstanceStats(AppDashboard):
 
     for instance in data:
       # TODO(cgb): Consider only doing a put if it doesn't exist
-      instance = InstanceInfo(id = instance['appid'] + instance['host'] + str(instance['port']),
+      instance = InstanceInfo(id = instance['appid'] + instance['host'] + \
+        str(instance['port']),
         appid = instance['appid'],
         host = instance['host'],
         port = instance['port'],
@@ -1045,7 +1077,8 @@ class InstanceStats(AppDashboard):
     data = json.loads(encoded_data)
 
     for instance in data:
-      instance = InstanceInfo.get_by_id(instance['appid'] + instance['host'] + str(instance['port']))
+      instance = InstanceInfo.get_by_id(instance['appid'] + instance['host'] + \
+        str(instance['port']))
       instance.key.delete()
 
     self.response.out.write('delete completed successfully!')
