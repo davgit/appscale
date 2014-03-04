@@ -28,6 +28,7 @@ Required in AppScale because app_identity API does not work outside GAE.
 import logging
 import pickle
 import os
+import sys
 import webapp2
 
 from google.appengine.ext import db
@@ -35,6 +36,10 @@ from google.appengine.api import users
 
 from google.appengine.ext.datastore_admin import utils
 
+sys.path.append(os.path.join(os.path.dirname(__file__),
+  "../../../../lib/google-api-python-client"))
+sys.path.append(os.path.join(os.path.dirname(__file__),
+  "../../../../lib/httplib2"))
 from oauth2client import client
 
 XSRF_ACTION = 'auth'
