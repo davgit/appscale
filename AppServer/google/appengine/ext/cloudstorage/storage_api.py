@@ -171,11 +171,13 @@ class ReadBuffer(object):
 
     status, headers, _ = self._api.head_object(path)
     errors.check_status(status, [200], path, resp_headers=headers)
-    self._file_size = long(headers['content-length'])
+    # This was modified from 'content-lenght' because that was 
+    # returning a 0.
+    self._file_size = long(headers['x-goog-stored-content-length'])
     self._check_etag(headers.get('etag'))
     if self._file_size == 0:
       self._buffer_future = None
-
+    
   def __getstate__(self):
     """Store state as part of serialization/pickling.
 

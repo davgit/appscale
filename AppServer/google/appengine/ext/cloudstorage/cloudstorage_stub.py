@@ -16,9 +16,9 @@
 #
 """Stub for Google storage."""
 
-
+import logging
 import StringIO
-
+import os
 from google.appengine.ext.cloudstorage import api_utils
 from google.appengine.ext.cloudstorage import common
 from google.appengine.ext.cloudstorage import errors
@@ -137,8 +137,8 @@ class CloudStorageStub(object):
       ValueError: if file doesn't exist.
     """
     gcs_file = gcs.open(filename)
-    gcs_file.seek(start, end)
-    contents = gcs_file.read() 
+    gcs_file.seek(start)
+    contents = gcs_file.read(size=end-start)
     gcs_file.close()
     return contents
 
