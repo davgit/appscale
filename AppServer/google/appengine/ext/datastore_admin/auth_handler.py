@@ -115,20 +115,9 @@ class DoAuthHandler(webapp2.RequestHandler):
     if not pickled_flow:
       raise Exception("Unable to resume auth flow.")
     flow = pickle.loads(pickled_flow)
-
-    # Store the credentials for later use.
-    logging.info("FLOW: {0}".format(flow))
-    logging.info("CODE: {0}".format(code))
-    app_path = 'http://ec2-107-22-113-218.compute-1.amazonaws.com:8080'
-    client_id = '364187490647.apps.googleusercontent.com'
-    client_secret = 'hzu0yziLag4-TJ1H5biyQbZw'
-    redirect_uri = '{0}{1}/{2}'.format(app_path, utils.config.BASE_PATH, 
-      self.SUFFIX)
-
     current_user = users.get_current_user().email() 
-    flow = client.OAuth2WebServerFlow(client_id=client_id, 
-      client_secret=client_secret, scope=self.SCOPE, redirect_uri=redirect_uri, 
-      state=current_user)
+
+    # This step fails right now. Needs debugging.
     credentials = flow.step2_exchange(code)
     oauth_model = GCSOAuth.get_by_key_name(current_user)
     oauth_model.pickled_creds = pickle.dumps(credentials)
@@ -146,18 +135,15 @@ class DoAuthHandler(webapp2.RequestHandler):
 
     This will redirect to Google's OAuth service with the required information.
     """
-    #token = self.request.get('xsrf_token')
-    #if not utils.ValidateXsrfToken(token, XSRF_ACTION):
-    #  raise Exception("XSRF Token was not valid")
+    token = self.request.get('xsrf_token')
+    if not utils.ValidateXsrfToken(token, XSRF_ACTION):
+      raise Exception("XSRF Token was not valid")
 
-    #client_id = self.request.get('client_id')
-    client_id = '364187490647.apps.googleusercontent.com'
+    client_id = self.request.get('client_id')
     logging.info("CLIENT ID: {0}".format(client_id))
-    #client_secret = self.request.get('client_secret')
-    client_secret = 'hzu0yziLag4-TJ1H5biyQbZw'
+    client_secret = self.request.get('client_secret')
     # TODO verify the app path is a valid URL to redirect to
-    #app_path = self.request.get('app_path')
-    app_path = 'http://ec2-107-22-113-218.compute-1.amazonaws.com:8080'
+    app_path = self.request.get('app_path')
     if not client_id or not client_secret or not app_path:
       raise Exception("Missing client ID, client secret, or app path.")
 

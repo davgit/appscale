@@ -84,7 +84,6 @@ def get_access_token():
   scope = 'https://www.googleapis.com/auth/devstorage.read_write'
   token, _ = app_identity.get_access_token(scope)
   return token
-  #return _access_token
 
 
 class GCSFileStat(object):
